@@ -1,6 +1,8 @@
 package org.informatikEHM.kinoReservierung.util;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableCellRenderer;
 import java.awt.event.ActionEvent;
 import java.sql.SQLException;
 
@@ -26,6 +28,13 @@ public class DBTable extends JTable implements Refreshable {
         }));
         setComponentPopupMenu(rightClick);
 
+        DefaultTableCellRenderer intRendererRHS = new DefaultTableCellRenderer();
+        // Everything else is LHS, so mixing int + other columns would lead to awkward results
+        intRendererRHS.setHorizontalAlignment(SwingConstants.LEFT);
+        setDefaultRenderer(Integer.class, intRendererRHS);
+
+        setAutoCreateRowSorter(true);
+
         refresh();
     }
 
@@ -36,5 +45,10 @@ public class DBTable extends JTable implements Refreshable {
 
     private DBTableModel getModel1() {
         return (DBTableModel) getModel();
+    }
+
+    @Override
+    public TableCellRenderer getDefaultRenderer(Class<?> columnClass) {
+        return super.getDefaultRenderer(columnClass);
     }
 }

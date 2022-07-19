@@ -45,7 +45,7 @@ public class DBTableModel implements TableModel, Refreshable {
 
     @Override
     public Class<?> getColumnClass(int i) {
-        return String.class;
+        return columns[i].type.clazz;
     }
 
     @Override
@@ -98,7 +98,7 @@ public class DBTableModel implements TableModel, Refreshable {
                 while (results.next()) {
                     final Object[] row = new Object[columns.length];
                     for (int i = 0; i < columns.length; i++) {
-                        row[i] = results.getString(columns[i].resultSetName);
+                        row[i] = columns[i].type.getFromDB(results, columns[i].resultSetName);
                     }
                     newRows.add(row);
                 }
@@ -124,12 +124,43 @@ public class DBTableModel implements TableModel, Refreshable {
         return table;
     }
 
+    public enum ColumnType {
+        STRING(String.class) {
+            @Override
+            public Object getFromDB(ResultSet result, String columnName) throws SQLException {
+                return result.getString(columnName);
+            }
+        },
+        INT(Integer.class) {
+            @Override
+            public Object getFromDB(ResultSet result, String columnName) throws SQLException {
+                return result.getInt(columnName);
+            }
+        },
+        DATE(Date.class) {
+            @Override
+            public Object getFromDB(ResultSet result, String columnName) throws SQLException {
+                return result.getDate(columnName);
+            }
+        };
+
+        public final Class<?> clazz;
+
+        ColumnType(Class<?> clazz) {
+            this.clazz = clazz;
+        }
+
+        public abstract Object getFromDB(ResultSet result, String columnName) throws SQLException;
+    }
+
     public static class ColumnInfo {
         public final String name;
         public final String resultSetName;
+        public final ColumnType type;
 
-        public ColumnInfo(String name, String resultSetName) {
+        public ColumnInfo(String name, String resultSetName, ColumnType type) {
             this.name = name;
+            this.type = type;
             this.resultSetName = resultSetName == null ? name : resultSetName;
         }
     }

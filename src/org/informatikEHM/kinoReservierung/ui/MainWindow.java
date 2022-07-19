@@ -16,20 +16,20 @@ public class MainWindow extends JTabbedPane {
 
     private void addDBTabs(Connection db) throws Exception {
         addDBTab(db, "Filme", "film", new DBTableModel.ColumnInfo[]{
-                new DBTableModel.ColumnInfo("Film Nummer", "idFilm"),
-                new DBTableModel.ColumnInfo("Titel", "titel"),
-                new DBTableModel.ColumnInfo("Dauer", "dauer"),
-                new DBTableModel.ColumnInfo("FSK-Freigabe", "fsk")
+                new DBTableModel.ColumnInfo("Film Nummer", "idFilm", DBTableModel.ColumnType.INT),
+                new DBTableModel.ColumnInfo("Titel", "titel", DBTableModel.ColumnType.STRING),
+                new DBTableModel.ColumnInfo("Dauer", "dauer", DBTableModel.ColumnType.INT),
+                new DBTableModel.ColumnInfo("FSK-Freigabe", "fsk", DBTableModel.ColumnType.INT)
         });
         addDBTab(db, "Kinosäle", "kinosaal", new DBTableModel.ColumnInfo[]{
-                new DBTableModel.ColumnInfo("Nummer", "idKinosaal"),
-                new DBTableModel.ColumnInfo("Wie viele Plätze?", "anzahlPlaetze")
+                new DBTableModel.ColumnInfo("Nummer", "idKinosaal", DBTableModel.ColumnType.INT),
+                new DBTableModel.ColumnInfo("Wie viele Plätze?", "anzahlPlaetze", DBTableModel.ColumnType.INT)
         });
         addDBTab(db, "Kunden", "kunde", new DBTableModel.ColumnInfo[]{
-                new DBTableModel.ColumnInfo("Kunden NR", "idKunde"),
-                new DBTableModel.ColumnInfo("Nachname", "nachname"),
-                new DBTableModel.ColumnInfo("Vorname", "vorname"),
-                new DBTableModel.ColumnInfo("Geburtsdatum", "gebDatum")
+                new DBTableModel.ColumnInfo("Kunden NR", "idKunde", DBTableModel.ColumnType.INT),
+                new DBTableModel.ColumnInfo("Nachname", "nachname", DBTableModel.ColumnType.STRING),
+                new DBTableModel.ColumnInfo("Vorname", "vorname", DBTableModel.ColumnType.STRING),
+                new DBTableModel.ColumnInfo("Geburtsdatum", "gebDatum", DBTableModel.ColumnType.DATE)
         });
     }
 
