@@ -1,4 +1,7 @@
-package org.informatikEHM.kinoReservierung.util;
+package org.informatikEHM.kinoReservierung.util.dbTable;
+
+import org.informatikEHM.kinoReservierung.util.Refreshable;
+import org.informatikEHM.kinoReservierung.util.SwingUtilitiesX;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -7,7 +10,7 @@ import java.awt.event.ActionEvent;
 import java.sql.SQLException;
 
 public class DBTable extends JTable implements Refreshable {
-    public DBTable(DBTableModel model) throws Exception {
+    public DBTable(DBTableModel model) {
         super(model);
 
         setInheritsPopupMenu(true);
@@ -39,8 +42,8 @@ public class DBTable extends JTable implements Refreshable {
     }
 
     @Override
-    public void refresh() throws Exception {
-        getModel1().refresh();
+    public void refresh() {
+        SwingUtilitiesX.exception2Dialog(this, "Laden der Tabelle", getModel1()::refresh);
     }
 
     private DBTableModel getModel1() {

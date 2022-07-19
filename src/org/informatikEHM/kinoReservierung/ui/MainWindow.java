@@ -1,7 +1,7 @@
 package org.informatikEHM.kinoReservierung.ui;
 
-import org.informatikEHM.kinoReservierung.util.DBTable;
-import org.informatikEHM.kinoReservierung.util.DBTableModel;
+import org.informatikEHM.kinoReservierung.util.dbTable.DBTable;
+import org.informatikEHM.kinoReservierung.util.dbTable.DBTableModel;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;

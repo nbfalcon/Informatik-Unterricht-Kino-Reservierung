@@ -1,4 +1,4 @@
-package org.informatikEHM.kinoReservierung.util;
+package org.informatikEHM.kinoReservierung.util.dbTable;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -10,7 +10,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DBTableModel implements TableModel, Refreshable {
+public class DBTableModel implements TableModel {
     private final @NotNull String query;
     private final @NotNull ColumnInfo[] columns;
     private final @Nullable String table;
@@ -73,7 +73,7 @@ public class DBTableModel implements TableModel, Refreshable {
                 statement.setString(2, thisRow[primaryKey].toString()); // primary key
                 statement.execute();
             } catch (SQLException e) {
-                System.err.println("Update schlug fehl: " + e.getLocalizedMessage());
+                System.err.println("Ändern der Spalte scheiterte: " + e.getLocalizedMessage());
             }
         }
     }
@@ -89,7 +89,6 @@ public class DBTableModel implements TableModel, Refreshable {
         }
     }
 
-    @Override
     public void refresh() throws SQLException {
         try (Statement statement = db.createStatement()) {
             List<Object[]> newRows;
