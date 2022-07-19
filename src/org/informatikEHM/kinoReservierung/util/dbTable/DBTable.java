@@ -7,6 +7,7 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.sql.SQLException;
 
 public class DBTable extends JTable implements Refreshable {
@@ -30,6 +31,13 @@ public class DBTable extends JTable implements Refreshable {
             }
         }));
         setComponentPopupMenu(rightClick);
+        getActionMap().put("refresh", new AbstractAction("refresh") {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                refresh();
+            }
+        });
+        getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_F5, 0), "refresh");
 
         DefaultTableCellRenderer intRendererRHS = new DefaultTableCellRenderer();
         // Everything else is LHS, so mixing int + other columns would lead to awkward results
