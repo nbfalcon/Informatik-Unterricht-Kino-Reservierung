@@ -79,7 +79,7 @@ public class DBTableModel implements TableModel, Refreshable {
     }
 
     public void deleteRow(int row) throws SQLException {
-        try (PreparedStatement statement = db.prepareStatement(String.format("DELETE FROM `%s` WHERE `%s` = ?", table, columns[primaryKey].resultSetName))){
+        try (PreparedStatement statement = db.prepareStatement(String.format("DELETE FROM `%s` WHERE `%s` = ?", table, columns[primaryKey].resultSetName))) {
             statement.setString(1, cachedRows.get(row)[primaryKey].toString());
             statement.execute();
             cachedRows.remove(row);
@@ -118,6 +118,10 @@ public class DBTableModel implements TableModel, Refreshable {
     @Override
     public void removeTableModelListener(TableModelListener tableModelListener) {
         listeners.remove(tableModelListener);
+    }
+
+    public @Nullable String getTable() {
+        return table;
     }
 
     public static class ColumnInfo {
