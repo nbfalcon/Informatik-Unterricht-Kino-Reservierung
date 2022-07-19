@@ -38,6 +38,8 @@ public class DBTable extends JTable implements Refreshable {
 
         setAutoCreateRowSorter(true);
 
+        model.setComponentForErrorDialog(this);
+
         refresh();
     }
 

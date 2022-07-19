@@ -1,11 +1,13 @@
 package org.informatikEHM.kinoReservierung.util.dbTable;
 
+import org.informatikEHM.kinoReservierung.util.SwingUtilitiesX;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
+import java.awt.*;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,8 +21,9 @@ public class DBTableModel implements TableModel {
     private final @NotNull Connection db;
     private List<Object[]> cachedRows = null;
 
-    public DBTableModel(@NotNull Connection db, @NotNull String query, @NotNull ColumnInfo[] columns,
-                        int primaryKey, @Nullable String table) {
+    private Component componentForErrorDialog;
+
+    public DBTableModel(@NotNull Connection db, @NotNull String query, @NotNull ColumnInfo[] columns, int primaryKey, @Nullable String table) {
         this.db = db;
         this.query = query;
         this.columns = columns;
@@ -65,16 +68,13 @@ public class DBTableModel implements TableModel {
         Object[] thisRow = cachedRows.get(row);
         thisRow[col] = o;
         if (table != null && primaryKey != -1) {
-            try (PreparedStatement statement = db.prepareStatement(
-                    String.format("UPDATE `%s` SET `%s`= ? WHERE `%s`= ?",
-                            table, columns[col].resultSetName,
-                            columns[primaryKey].resultSetName))) {
-                statement.setString(1, o.toString()); // new value
-                statement.setString(2, thisRow[primaryKey].toString()); // primary key
-                statement.execute();
-            } catch (SQLException e) {
-                System.err.println("Ändern der Spalte scheiterte: " + e.getLocalizedMessage());
-            }
+            SwingUtilitiesX.exception2Dialog(componentForErrorDialog, "Ändern der Spalte", () -> {
+                try (PreparedStatement statement = db.prepareStatement(String.format("UPDATE `%s` SET `%s`= ? WHERE `%s`= ?", table, columns[col].resultSetName, columns[primaryKey].resultSetName))) {
+                    statement.setString(1, o.toString()); // new value
+                    statement.setString(2, thisRow[primaryKey].toString()); // primary key
+                    statement.execute();
+                }
+            });
         }
     }
 
@@ -123,20 +123,22 @@ public class DBTableModel implements TableModel {
         return table;
     }
 
+    public void setComponentForErrorDialog(Component componentForErrorDialog) {
+        this.componentForErrorDialog = componentForErrorDialog;
+    }
+
     public enum ColumnType {
         STRING(String.class) {
             @Override
             public Object getFromDB(ResultSet result, String columnName) throws SQLException {
                 return result.getString(columnName);
             }
-        },
-        INT(Integer.class) {
+        }, INT(Integer.class) {
             @Override
             public Object getFromDB(ResultSet result, String columnName) throws SQLException {
                 return result.getInt(columnName);
             }
-        },
-        DATE(Date.class) {
+        }, DATE(Date.class) {
             @Override
             public Object getFromDB(ResultSet result, String columnName) throws SQLException {
                 return result.getDate(columnName);
